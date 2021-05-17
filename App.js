@@ -5,6 +5,7 @@ import { StyleSheet, ScrollView, TextInput, View } from "react-native";
 import Heading from "./src/components/Heading";
 import Input from "./src/components/Input";
 import Button from "./src/components/Button";
+import TodoList from "./src/components/TodoList";
 
 let todoIndex = 0;
 
@@ -17,6 +18,8 @@ class App extends Component {
             type: "All",
         };
         this.submitTodo = this.submitTodo.bind(this);
+        this.toggleComplete = this.toggleComplete.bind(this);
+        this.deleteTodo = this.deleteTodo.bind(this);
     }
 
     inputChange(inputValue) {
@@ -40,8 +43,24 @@ class App extends Component {
         });
     }
 
+    toggleComplete(todoIndex) {
+        let todos = this.state.todos;
+        todos.forEach((todo) => {
+            if (todo.todoIndex === todoIndex) {
+                todo.complete = !todo.complete;
+            }
+        });
+        this.setState({ todos });
+    }
+
+    deleteTodo(todoIndex) {
+        let { todos } = this.state;
+        todos = todos.filter((todo) => todo.todoIndex !== todoIndex);
+        this.setState({ todos });
+    }
+
     render() {
-        const { inputValue } = this.state;
+        const { inputValue, todos } = this.state;
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -53,6 +72,7 @@ class App extends Component {
                         inputValue={inputValue}
                         inputChange={(text) => this.inputChange(text)}
                     />
+                    <TodoList todos={todos} />
                     <Button submitTodo={this.submitTodo} />
                 </ScrollView>
             </View>
