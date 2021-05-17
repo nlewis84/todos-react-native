@@ -4,6 +4,9 @@ import { render } from "react-dom";
 import { StyleSheet, ScrollView, TextInput, View } from "react-native";
 import Heading from "./src/components/Heading";
 import Input from "./src/components/Input";
+import Button from "./src/components/Button";
+
+let todoIndex = 0;
 
 class App extends Component {
     constructor() {
@@ -13,11 +16,30 @@ class App extends Component {
             todos: [],
             type: "All",
         };
+        this.submitTodo = this.submitTodo.bind(this);
     }
+
     inputChange(inputValue) {
         console.log(" Input Value: ", inputValue);
         this.setState({ inputValue });
     }
+
+    submitTodo() {
+        if (this.state.inputValue.match(/^\s*$/)) {
+            return console.log(this.state.inputValue);
+        }
+        const todo = {
+            title: this.state.inputValue,
+            todoIndex,
+            complete: false,
+        };
+        todoIndex++;
+        const todos = [...this.state.todos, todo];
+        this.setState({ todos, inputValue: "" }, () => {
+            console.log("State: ", this.state);
+        });
+    }
+
     render() {
         const { inputValue } = this.state;
         return (
@@ -31,6 +53,7 @@ class App extends Component {
                         inputValue={inputValue}
                         inputChange={(text) => this.inputChange(text)}
                     />
+                    <Button submitTodo={this.submitTodo} />
                 </ScrollView>
             </View>
         );
